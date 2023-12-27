@@ -17,3 +17,28 @@ export const fetchImages = async () => {
     console.error("erro nas imagens", error);
   }
 };
+
+// saving game data to local storage
+export const saveGameState = (gameState) => {
+  localStorage.setItem("gameState", JSON.stringify(gameState));
+};
+
+// loading game data from local storage
+export const loadGameState = () => {
+  try {
+    const savedData = localStorage.getItem("gameState");
+    if (savedData === null) {
+      // no saved data
+      return undefined;
+    }
+    return JSON.parse(savedData);
+  } catch (err) {
+    console.error("Error", err);
+    return undefined;
+  }
+};
+
+//clearing
+export const clearGameState = () => {
+  localStorage.removeItem("gameState");
+};

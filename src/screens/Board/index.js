@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { pauseGame, resumeGame } from "../../redux/reducers/game";
-import { fetchImages } from "../../utils";
+import {
+  fetchImages,
+  saveGameState,
+  loadGameState,
+  clearGameState,
+} from "../../utils";
 
 import Timer from "../../components/Timer";
 import ScoreModal from "../../components/ScoreModal";
@@ -10,8 +15,18 @@ import styles from "./style";
 
 const Board = () => {
   const [cards, setCards] = useState([]);
+  console.log("🚀🚀 ~  file: index.js:18 ~  Board ~  cards:", cards);
+  const [isInitalLoading, setInitialLoading] = useState(true); // to ensure that the game is saved after the initial load
   const [flippedCards, setFlippedCards] = useState([]);
-  const [matchedCards, setMatchedCards] = useState([]);
+  console.log(
+    "🚀🚀 ~  file: index.js:21 ~  Board ~  flippedCards:",
+    flippedCards
+  );
+  const [matchedCards, setMatchedCards] = useState(new Set());
+  console.log(
+    "🚀🚀 ~  file: index.js:23 ~  Board ~  matchedCards:",
+    matchedCards
+  );
   const [timeCount, setTimeCount] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [cantFlipMore, setCanFlipMore] = useState(false); // to ensure that the user can't flip more than 2 cards at a time
@@ -24,25 +39,81 @@ const Board = () => {
   const username = useSelector((state) => state.user.user);
   console.log("🚀🚀 ~  file: index.js:25 ~  Board ~  username:", username);
 
-  useEffect(() => {
-    // Passar para utils <------
-    const gameInit = async () => {
-      const images = await fetchImages();
-      const doubledImages = [...images, ...images]; // Double the images for pairs
-      // Shuffle and create cards
-      const shuffledCards = doubledImages
-        .map((image) => ({
-          id: Math.random(),
-          image,
-          flipped: false,
-          matched: false,
-        }))
-        .sort(() => Math.random() - 0.5);
-      setCards(shuffledCards);
-    };
+  //save
 
-    gameInit();
-  }, []);
+  useEffect(() => {
+    if (!isInitalLoading) {
+      const gameState = {
+        username,
+        cards,
+        flippedCards,
+        // have to covert matchedCards to an array to be able to save it
+        matchedCards: Array.from(matchedCards),
+        timeCount,
+        timerActive,
+        cantFlipMore,
+        gameOver,
+      };
+      saveGameState(gameState);
+    }
+  }, [
+    cards,
+    flippedCards,
+    matchedCards,
+    timeCount,
+    timerActive,
+    cantFlipMore,
+    gameOver,
+    isInitalLoading,
+    username,
+  ]);
+
+  //load
+  useEffect(() => {
+    const savedData = loadGameState();
+    console.log("Loaded saved data:", savedData);
+
+    if (
+      savedData &&
+      savedData.username === username &&
+      savedData.cards.length > 0
+    ) {
+      // Load the game state
+      setCards(savedData.cards);
+      setFlippedCards(savedData.flippedCards);
+      // Convert matchedCards to a Set again
+      setMatchedCards(
+        new Set(
+          Array.isArray(savedData.matchedCards) ? savedData.matchedCards : []
+        )
+      );
+      setTimeCount(savedData.timeCount);
+      setTimerActive(savedData.timerActive);
+      setCanFlipMore(savedData.cantFlipMore);
+      setGameOver(savedData.gameOver);
+    } else {
+      // Initialize a new game
+      gameInit();
+    }
+  }, [username]);
+
+  // Passar para utils <------
+  const gameInit = async () => {
+    console.log("init");
+    const images = await fetchImages();
+    const doubledImages = [...images, ...images]; // Double the images for pairs
+    // Shuffle and create cards
+    const shuffledCards = doubledImages
+      .map((image) => ({
+        id: Math.random(),
+        image,
+        flipped: false,
+        matched: false,
+      }))
+      .sort(() => Math.random() - 0.5);
+    setCards(shuffledCards);
+    setInitialLoading(false);
+  };
 
   const openModal = () => {
     setModalOpen(true);
@@ -103,7 +174,7 @@ const Board = () => {
           );
           setFlippedCards([]);
           setCanFlipMore(false);
-        }, 1000); // 1 second delay for the player to see the cards
+        }, 1000);
       }
     }
   }, [flippedCards, cards]);
@@ -117,6 +188,7 @@ const Board = () => {
   }, [matchedCards, cards, timeCount]);
 
   const resetGame = () => {
+    clearGameState();
     setTimeCount(0);
     setTimerActive(false);
   };
