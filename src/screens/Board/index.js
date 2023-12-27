@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { pauseGame, resumeGame } from "../../redux/reducers/game";
+import { pauseGame, resumeGame, addHighScore } from "../../redux/reducers/game";
 import { logoutUser } from "../../redux/reducers/user";
 import {
   fetchImages,
@@ -13,35 +13,28 @@ import {
 import Timer from "../../components/Timer";
 import ScoreModal from "../../components/ScoreModal";
 import LogoutButton from "../../components/LogoutButton";
+import GameComplete from "../../components/GameComplete";
 
 import styles from "./style";
 
 const Board = () => {
   const [cards, setCards] = useState([]);
-  console.log("🚀🚀 ~  file: index.js:18 ~  Board ~  cards:", cards);
   const [isInitalLoading, setInitialLoading] = useState(true); // to ensure that the game is saved after the initial load
+
   const [flippedCards, setFlippedCards] = useState([]);
-  console.log(
-    "🚀🚀 ~  file: index.js:21 ~  Board ~  flippedCards:",
-    flippedCards
-  );
+
   const [matchedCards, setMatchedCards] = useState(new Set());
-  console.log(
-    "🚀🚀 ~  file: index.js:23 ~  Board ~  matchedCards:",
-    matchedCards
-  );
+
   const [timeCount, setTimeCount] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [cantFlipMore, setCanFlipMore] = useState(false); // to ensure that the user can't flip more than 2 cards at a time
   const [modalOpen, setModalOpen] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
+  const [isGameComplete, setIsGameComplete] = useState(false);
 
   const dispatch = useDispatch();
-  const isPaused = useSelector((state) => state.game.isPaused);
   const navigate = useNavigate();
-
+  const isPaused = useSelector((state) => state.game.isPaused);
   const username = useSelector((state) => state.user.user);
-  console.log("🚀🚀 ~  file: index.js:25 ~  Board ~  username:", username);
 
   //save
 
@@ -56,7 +49,6 @@ const Board = () => {
         timeCount,
         timerActive,
         cantFlipMore,
-        gameOver,
       };
       saveGameState(gameState);
     }
@@ -67,7 +59,6 @@ const Board = () => {
     timeCount,
     timerActive,
     cantFlipMore,
-    gameOver,
     isInitalLoading,
     username,
   ]);
@@ -75,7 +66,6 @@ const Board = () => {
   //load
   useEffect(() => {
     const savedData = loadGameState();
-    console.log("Loaded saved data:", savedData);
 
     if (
       savedData &&
@@ -94,7 +84,6 @@ const Board = () => {
       setTimeCount(savedData.timeCount);
       setTimerActive(savedData.timerActive);
       setCanFlipMore(savedData.cantFlipMore);
-      setGameOver(savedData.gameOver);
     } else {
       // Initialize a new game
       gameInit();
@@ -103,7 +92,6 @@ const Board = () => {
 
   // Passar para utils <------
   const gameInit = async () => {
-    console.log("init");
     const images = await fetchImages();
     const doubledImages = [...images, ...images]; // Double the images for pairs
     // Shuffle and create cards
@@ -184,18 +172,34 @@ const Board = () => {
   }, [flippedCards, cards]);
 
   useEffect(() => {
-    if (matchedCards.size === cards.length) {
+    if (matchedCards.size === cards.length && !isInitalLoading) {
       setTimerActive(false);
-      console.log("Game complete! Time taken: " + timeCount + " seconds");
-      // Handle game completion (e.g., stop timer, show message)
+      setIsGameComplete(true);
     }
-  }, [matchedCards, cards, timeCount]);
+  }, [matchedCards, cards, timeCount, isInitalLoading]);
 
   const resetGame = () => {
     clearGameState();
+    setInitialLoading(true);
+    setCards([]);
+    setFlippedCards([]);
+    setMatchedCards(new Set());
     setTimeCount(0);
     setTimerActive(false);
+    setIsGameComplete(false);
+    gameInit();
   };
+
+  //adding highscore
+  useEffect(() => {
+    if (isGameComplete) {
+      const highScore = {
+        username,
+        time: timeCount,
+      };
+      dispatch(addHighScore(highScore));
+    }
+  }, [isGameComplete, timeCount, username, dispatch]);
 
   //logout
   const handleLogout = () => {
@@ -217,28 +221,35 @@ const Board = () => {
         <button onClick={openModal}>High Scores</button>
         <LogoutButton handleLogout={handleLogout} />
       </div>
-      <div style={styles.board}>
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            style={
-              // passar logica para fora
-              card.flipped
-                ? card.matched
-                  ? styles.matched
-                  : styles.flipped
-                : styles.card
-            }
-            onClick={() => !card.flipped && flipCard(card.id)}
-          >
-            {card.flipped || card.matched ? (
-              <img src={card.image} alt='card' />
-            ) : (
-              <div style={styles.cardBack}></div>
-            )}
-          </div>
-        ))}
-      </div>
+      {isGameComplete ? (
+        <GameComplete
+          checkScore={() => setModalOpen(true)}
+          handlePlayAgain={resetGame}
+        />
+      ) : (
+        <div style={styles.board}>
+          {cards.map((card) => (
+            <div
+              key={card.id}
+              style={
+                // passar logica para fora
+                card.flipped
+                  ? card.matched
+                    ? styles.matched
+                    : styles.flipped
+                  : styles.card
+              }
+              onClick={() => !card.flipped && flipCard(card.id)}
+            >
+              {card.flipped || card.matched ? (
+                <img src={card.image} alt='card' />
+              ) : (
+                <div style={styles.cardBack}></div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
       {modalOpen && (
         <ScoreModal
           isOpen={modalOpen}

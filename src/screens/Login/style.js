@@ -1,11 +1,11 @@
 const styles = {
   container: {
     display: "flex",
-    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    height: "100vh",
+    height: "100vh", // 100% of the viewport height
+    backgroundColor: "#3a3a3a",
   },
-}
+};
 
-export default styles
+export default styles;

@@ -4,7 +4,8 @@ const style = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 50,
+    height: "100vh",
+    backgroundColor: "#3a3a3a",
   },
   board: {
     display: "grid",
@@ -31,13 +32,14 @@ const style = {
   flipped: {
     visibility: "visible",
   },
-  // matched: {
-  //   visibility: "visible",
-  //   opacity: 0.5,
-  // },
+  matched: {
+    visibility: "visible",
+    opacity: 0.5,
+    border: "1px solid green",
+  },
   cardBack: {
     position: "absolute",
-    backgroundColor: "#333",
+    backgroundColor: "#3333",
     left: 0,
     bottom: 0,
     right: 0,

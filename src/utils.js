@@ -22,7 +22,6 @@ export const fetchImages = async () => {
 export const saveGameState = (gameState) => {
   localStorage.setItem("gameState", JSON.stringify(gameState));
 };
-
 // loading game data from local storage
 export const loadGameState = () => {
   try {
@@ -40,5 +39,7 @@ export const loadGameState = () => {
 
 //clearing
 export const clearGameState = () => {
+  console.log("CLEAR");
   localStorage.removeItem("gameState");
+  console.log("CLEARED STOAGE", localStorage.gameState);
 };

@@ -4,7 +4,7 @@ import styles from "./style";
 
 const LoginForm = ({ onSubmit, value, onChange }) => {
   return (
-    <>
+    <div style={styles.container}>
       <form style={styles.form} onSubmit={onSubmit}>
         <h2 style={styles.title}>Login</h2>
         <input
@@ -18,7 +18,7 @@ const LoginForm = ({ onSubmit, value, onChange }) => {
           Login
         </button>
       </form>
-    </>
+    </div>
   );
 };
 
