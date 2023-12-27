@@ -12,7 +12,8 @@ const Board = () => {
   const [matchedCards, setMatchedCards] = useState([]);
   const [timeCount, setTimeCount] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
-  const [cantFlipMore, setCanFlipMore] = useState(true); // to ensure that the user can't flip more than 2 cards at a time
+  const [cantFlipMore, setCanFlipMore] = useState(false); // to ensure that the user can't flip more than 2 cards at a time
+
   const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
@@ -36,7 +37,12 @@ const Board = () => {
   }, []);
 
   const flipCard = (id) => {
+    if (cantFlipMore || cards.find((card) => card.id === id).flipped) {
+      return null;
+    }
+
     if (!timerActive) setTimerActive(true);
+
     setCards((cards) =>
       cards.map((card) => {
         if (card.id === id) {
@@ -50,18 +56,19 @@ const Board = () => {
 
   useEffect(() => {
     if (flippedCards.length === 2) {
+      setCanFlipMore(true);
       const [firstCardId, secondCardId] = flippedCards;
       const firstCard = cards.find((card) => card.id === firstCardId);
       const secondCard = cards.find((card) => card.id === secondCardId);
 
       if (firstCard.image === secondCard.image) {
-        // It's a match
         setMatchedCards(
           (matchedCards) =>
             new Set([...matchedCards, firstCardId, secondCardId])
         );
+        setFlippedCards([]);
+        setCanFlipMore(false);
       } else {
-        // Not a match, flip the cards back after a short delay
         setTimeout(() => {
           setCards((cards) =>
             cards.map((card) => {
@@ -71,10 +78,10 @@ const Board = () => {
               return card;
             })
           );
-        }, 1000);
+          setFlippedCards([]);
+          setCanFlipMore(false);
+        }, 1000); // 1 second delay for the player to see the cards
       }
-
-      setFlippedCards([]);
     }
   }, [flippedCards, cards]);
 
