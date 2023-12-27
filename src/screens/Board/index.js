@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { pauseGame, resumeGame } from "../../redux/reducers/game";
+import { logoutUser } from "../../redux/reducers/user";
 import {
   fetchImages,
   saveGameState,
@@ -10,6 +12,7 @@ import {
 
 import Timer from "../../components/Timer";
 import ScoreModal from "../../components/ScoreModal";
+import LogoutButton from "../../components/LogoutButton";
 
 import styles from "./style";
 
@@ -35,6 +38,7 @@ const Board = () => {
 
   const dispatch = useDispatch();
   const isPaused = useSelector((state) => state.game.isPaused);
+  const navigate = useNavigate();
 
   const username = useSelector((state) => state.user.user);
   console.log("🚀🚀 ~  file: index.js:25 ~  Board ~  username:", username);
@@ -193,6 +197,12 @@ const Board = () => {
     setTimerActive(false);
   };
 
+  //logout
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate("/");
+  };
+
   return (
     <div style={styles.container}>
       <h1>Welcome {username}</h1>
@@ -205,6 +215,7 @@ const Board = () => {
           isPaused={isPaused}
         />
         <button onClick={openModal}>High Scores</button>
+        <LogoutButton handleLogout={handleLogout} />
       </div>
       <div style={styles.board}>
         {cards.map((card) => (
