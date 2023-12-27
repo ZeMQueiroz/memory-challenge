@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../../reducers/user";
+import { loginUser } from "../../redux/reducers/user";
 import { useNavigate } from "react-router-dom";
 
 import LoginForm from "../../components/LoginForm";

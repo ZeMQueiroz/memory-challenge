@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { logoutUser } from "../../reducers/user";
+import { useSelector, useDispatch } from "react-redux";
+import { pauseGame, resumeGame } from "../../redux/reducers/game";
 import { fetchImages } from "../../utils";
 
 import Timer from "../../components/Timer";
+import ScoreModal from "../../components/ScoreModal";
 
 import styles from "./style";
 
@@ -13,8 +15,14 @@ const Board = () => {
   const [timeCount, setTimeCount] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [cantFlipMore, setCanFlipMore] = useState(false); // to ensure that the user can't flip more than 2 cards at a time
-
+  const [modalOpen, setModalOpen] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+
+  const dispatch = useDispatch();
+  const isPaused = useSelector((state) => state.game.isPaused);
+
+  const username = useSelector((state) => state.user.user);
+  console.log("🚀🚀 ~  file: index.js:25 ~  Board ~  username:", username);
 
   useEffect(() => {
     // Passar para utils <------
@@ -36,8 +44,23 @@ const Board = () => {
     gameInit();
   }, []);
 
+  const openModal = () => {
+    setModalOpen(true);
+    dispatch(pauseGame());
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    dispatch(resumeGame());
+  };
+
   const flipCard = (id) => {
-    if (cantFlipMore || cards.find((card) => card.id === id).flipped) {
+    // flip + flipped + paused + gameOver
+    if (
+      cantFlipMore ||
+      cards.find((card) => card.id === id).flipped ||
+      isPaused
+    ) {
       return null;
     }
 
@@ -100,11 +123,17 @@ const Board = () => {
 
   return (
     <div style={styles.container}>
-      <Timer
-        timeCount={timeCount}
-        setTimeCount={setTimeCount}
-        timerActive={timerActive}
-      />
+      <h1>Welcome {username}</h1>
+      <h1>Memory Game</h1>
+      <div>
+        <Timer
+          timeCount={timeCount}
+          setTimeCount={setTimeCount}
+          timerActive={timerActive}
+          isPaused={isPaused}
+        />
+        <button onClick={openModal}>High Scores</button>
+      </div>
       <div style={styles.board}>
         {cards.map((card) => (
           <div
@@ -127,6 +156,13 @@ const Board = () => {
           </div>
         ))}
       </div>
+      {modalOpen && (
+        <ScoreModal
+          isOpen={modalOpen}
+          onClose={closeModal}
+          // scores={scores}
+        />
+      )}
     </div>
   );
 };
