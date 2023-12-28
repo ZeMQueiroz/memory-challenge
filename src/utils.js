@@ -19,6 +19,26 @@ export const fetchImages = async () => {
   }
 };
 
+export const initializeGame = async () => {
+  try {
+    const images = await fetchImages();
+    const doubledImages = [...images, ...images];
+    const shuffledCards = doubledImages
+      .map((image, index) => ({
+        id: index,
+        image,
+        flipped: false,
+        matched: false,
+      }))
+      .sort(() => Math.random() - 0.5);
+
+    return shuffledCards;
+  } catch (error) {
+    console.error("Error initializing game:", error);
+    return [];
+  }
+};
+
 // saving game data to local storage
 export const saveGameState = (gameState) => {
   localStorage.setItem("gameState", JSON.stringify(gameState));
