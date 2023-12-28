@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+# Probely Memy Game ReadMe
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Thinking Process
 
-## Available Scripts
+Below just the thinking process behind the project
 
-In the project directory, you can run:
+### `Porject Setup`
 
-### `npm start`
+Used `create-reat-app` for a quick setup
+installed the `react-router-dom` for the necessary routing
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### `Routing`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+I've setup the three requested routes while also making a `ProtectedRoute` component to block guest sessions.
 
-### `npm test`
+### `Authentication`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Made a simple form component that accepts a username input and with a simple submit button with no validations.
 
-### `npm run build`
+Starterd implementing the global state for the app, went with redux instead of Context for extra points.
+Also had to deal with slices which was new to me, which was interesting since I've been working with separated actions and reducers.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### `Game Page and Utils`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Started thinking on the game logic with some mock data.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+After a quick read into Pexels docs, I decided which query I was going to use and got `axios` to help with the request.
 
-### `npm run eject`
+Used redux to manage the game pause and resume states and made a timer component that would satisfy the needs of the challenge.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Used `localStorage` to save and load game data when the page is refreshed and if the same user is sumbmited in the login, if the user is different a new game should start.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### `Highs Scores Modal`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Here I made the first mistake.
+I've actually made a modal to render on top on the `/game` route instead of the `/game/scores`.
+It made more sense to me that to make this why so only later in the development I would be aware of tat mistake and fix the routes.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Also initially I was storing the high scores on the redux store so they were wiped out on refresh.
 
-## Learn More
+Later on I fixed the modal to render on the appropriate route and set the high score to store on the `localStorage`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Personal notes

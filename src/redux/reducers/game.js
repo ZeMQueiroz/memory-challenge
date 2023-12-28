@@ -5,6 +5,7 @@ const initialState = {
   highScores: [],
 };
 
+// a Slice encapsulates the reducer logic and actions for a single feature
 const gameSlice = createSlice({
   name: "game",
   initialState,
@@ -15,12 +16,9 @@ const gameSlice = createSlice({
     resumeGame: (state) => {
       state.isPaused = false;
     },
-    addHighScore: (state, action) => {
-      state.highScores.push(action.payload);
-    },
   },
 });
 
-export const { pauseGame, resumeGame, addHighScore } = gameSlice.actions;
+export const { pauseGame, resumeGame } = gameSlice.actions;
 
 export default gameSlice.reducer;

@@ -95,6 +95,32 @@ const Board = () => {
     );
   };
 
+  const renderBoard = () => {
+    return (
+      <div style={styles.board}>
+        {cards.map((card) => (
+          <div
+            key={card.id}
+            style={
+              card.flipped
+                ? card.matched
+                  ? styles.matched
+                  : styles.flipped
+                : styles.card
+            }
+            onClick={() => !card.flipped && flipCard(card.id)}
+          >
+            {card.flipped || card.matched ? (
+              <img src={card.image} alt='card' />
+            ) : (
+              <div style={styles.cardBack}></div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div style={styles.container}>
       {renderHeader()}
@@ -104,27 +130,7 @@ const Board = () => {
           handlePlayAgain={resetGame}
         />
       ) : (
-        <div style={styles.board}>
-          {cards.map((card) => (
-            <div
-              key={card.id}
-              style={
-                card.flipped
-                  ? card.matched
-                    ? styles.matched
-                    : styles.flipped
-                  : styles.card
-              }
-              onClick={() => !card.flipped && flipCard(card.id)}
-            >
-              {card.flipped || card.matched ? (
-                <img src={card.image} alt='card' />
-              ) : (
-                <div style={styles.cardBack}></div>
-              )}
-            </div>
-          ))}
-        </div>
+        renderBoard()
       )}
       {modalOpen && (
         <ScoreModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />

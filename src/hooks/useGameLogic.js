@@ -7,11 +7,11 @@ import {
 } from "../utils";
 
 const useGameLogic = (username) => {
-  const [isInitalLoading, setInitialLoading] = useState(true);
+  const [isInitalLoading, setInitialLoading] = useState(true); // Ensure the game is marked as initially loading
   const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState(new Set());
-  const [isGameComplete, setIsGameComplete] = useState(false);
+  const [isGameComplete, setIsGameComplete] = useState(false); // Manage game completion
   const [timeCount, setTimeCount] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [cantFlipMore, setCanFlipMore] = useState(false);
@@ -44,11 +44,15 @@ const useGameLogic = (username) => {
   ]);
 
   useEffect(() => {
-    if (matchedCards.size === cards.length && !isInitalLoading) {
+    if (
+      matchedCards.size === cards.length &&
+      cards.length > 0 &&
+      !isInitalLoading
+    ) {
       setTimerActive(false);
       setIsGameComplete(true);
     }
-  }, [matchedCards, cards, timeCount, isInitalLoading]);
+  }, [matchedCards, cards, isGameComplete, isInitalLoading]);
 
   // Game Initialization
   useEffect(() => {
@@ -86,7 +90,7 @@ const useGameLogic = (username) => {
     setTimeCount(0);
     setTimerActive(false);
     setIsGameComplete(false);
-    setInitialLoading(false); // Ensure the game is not marked as initially loading
+    setInitialLoading(false);
   };
 
   // Flip Cards
@@ -124,6 +128,7 @@ const useGameLogic = (username) => {
         setFlippedCards([]);
         setCanFlipMore(false);
       } else {
+        // card flip delay if mismatch
         setTimeout(() => {
           setCards((cards) =>
             cards.map((card) => {
@@ -150,15 +155,15 @@ const useGameLogic = (username) => {
 
   return {
     cards,
-    flippedCards,
     flipCard,
-    matchedCards,
-    isGameComplete,
-    cantFlipMore,
     timeCount,
+    timerActive,
+    flippedCards,
+    matchedCards,
+    cantFlipMore,
     setTimeCount,
     resetGame,
-    timerActive,
+    isGameComplete,
     setTimerActive,
     isInitalLoading,
   };
