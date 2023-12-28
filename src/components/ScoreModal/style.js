@@ -1,6 +1,6 @@
 export const topScores = {
   gold: { color: "gold" },
-  silver: { color: "#6483B7" },
+  silver: { color: "#82caff" },
   bronze: { color: "#cd7f32" },
 };
 
@@ -15,7 +15,7 @@ const styles = {
     right: 0,
     bottom: 0,
     zIndex: 100,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
   modal: {
     position: "relative",
@@ -26,7 +26,7 @@ const styles = {
     padding: 20,
     borderRadius: 8,
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    backgroundColor: "#3a3a3a",
+    backgroundColor: "#034c85",
     zIndex: 101,
   },
 
@@ -39,7 +39,7 @@ const styles = {
     position: "relative",
     padding: 10,
     borderRadius: 5,
-    border: "1px solid #5d5d5d",
+    border: "1px solid #b4653c",
   },
   list: {
     listStyle: "none",
@@ -54,8 +54,8 @@ const styles = {
     flexDirection: "row",
     alignItems: "center",
     padding: 20,
-    borderBottom: "1px solid #ddd",
-    backgroundColor: "#5d5d5d",
+    color: "#ddd",
+    borderBottom: "1px solid #b4653c",
   },
   listItem: {
     display: "flex",
@@ -63,8 +63,8 @@ const styles = {
     flexDirection: "row",
     alignItems: "center",
     padding: 20,
-    borderBottom: "1px solid #ddd",
-    backgroundColor: "#3a3a3a",
+    borderBottom: "1px solid #b4653c",
+
     color: "#ddd",
     fontWeight: "bold",
   },

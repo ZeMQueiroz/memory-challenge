@@ -3,7 +3,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#5d5d5d5d",
+    backgroundColor: "#b4653c",
     borderRadius: 10,
     padding: 20,
   },
@@ -11,22 +11,24 @@ const styles = {
     padding: 20,
     bprderRadius: 5,
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-    backgroundColor: "#dddd",
+    backgroundColor: "#034c85",
   },
 
   title: {
     marginTop: 0,
     marginBottom: 20,
+    color: "#ddd",
     textAlign: "center",
   },
   input: {
     fontSize: 16,
     padding: 10,
-    border: "1px solid #ddd",
+
     borderRadius: 5,
     marginBottom: 10,
     width: "100%",
     boxSizing: "border-box",
+    border: "1px solid #b4653c",
   },
   button: {
     display: "block",

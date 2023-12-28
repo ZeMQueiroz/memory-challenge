@@ -5,6 +5,13 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+    color: "#b4653c",
+  },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   button: {
     padding: 10,

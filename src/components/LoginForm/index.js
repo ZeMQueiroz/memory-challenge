@@ -15,7 +15,7 @@ const LoginForm = ({ onSubmit, value, onChange }) => {
           onChange={(e) => onChange(e.target.value)}
         />
         <button style={styles.button} type='submit'>
-          Login
+          Submit
         </button>
       </form>
     </div>

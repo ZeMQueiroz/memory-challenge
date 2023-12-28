@@ -15,7 +15,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(loginUser(username));
-    navigate("/board");
+    navigate("/game");
   };
 
   return (

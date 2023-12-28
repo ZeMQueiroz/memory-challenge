@@ -1,11 +1,19 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getHighScores } from "../../utils";
 
 import styles, { topScores } from "./style";
 
 const ScoreModal = ({ isOpen, onClose }) => {
-  const scores = useSelector((state) => state.game.highScores);
-  console.log("🚀🚀 ~  file: index.js:8 ~  ScoreModal ~  scores:", scores);
+  const scores = getHighScores();
+  const navigate = useNavigate();
+
+  const sortedScores = scores.sort((a, b) => a.time - b.time);
+
+  const handleClose = () => {
+    navigate("/game");
+    if (onClose) onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -21,7 +29,7 @@ const ScoreModal = ({ isOpen, onClose }) => {
   };
 
   const listItem = () => {
-    return scores.map((score, index) => {
+    return sortedScores.map((score, index) => {
       let style = styles.listItem;
       if (index === 0) style = { ...style, ...topScores.gold };
       else if (index === 1) style = { ...style, ...topScores.silver };
@@ -50,7 +58,7 @@ const ScoreModal = ({ isOpen, onClose }) => {
       <div style={styles.modal}>
         <h2 style={styles.title}>High Scores</h2>
         {renderList()}
-        <button style={styles.closeButton} onClick={onClose}>
+        <button style={styles.closeButton} onClick={handleClose}>
           Close
         </button>
       </div>

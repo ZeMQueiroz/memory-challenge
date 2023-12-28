@@ -8,7 +8,8 @@ export const fetchImages = async () => {
       "https://api.pexels.com/v1/search?query=nature&per_page=6",
       {
         headers: {
-          Authorization: PEXELS_API_KEY,
+          Authorization:
+            "zHKQ2p2kB7DyYhEAkYb75Y264dRZoBQ2uCVGlYywhZq1Ho7SrdTHn1oj",
         },
       }
     );
@@ -39,7 +40,17 @@ export const loadGameState = () => {
 
 //clearing
 export const clearGameState = () => {
-  console.log("CLEAR");
   localStorage.removeItem("gameState");
-  console.log("CLEARED STOAGE", localStorage.gameState);
+};
+
+export const getHighScores = () => {
+  const scores = localStorage.getItem("highScores");
+  return scores ? JSON.parse(scores) : [];
+};
+
+// save score
+export const saveHighScore = (newScore) => {
+  const scores = getHighScores();
+  scores.push(newScore);
+  localStorage.setItem("highScores", JSON.stringify(scores));
 };

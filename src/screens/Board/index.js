@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { pauseGame, resumeGame, addHighScore } from "../../redux/reducers/game";
+import { pauseGame, resumeGame } from "../../redux/reducers/game";
 import { logoutUser } from "../../redux/reducers/user";
 import {
   fetchImages,
   saveGameState,
   loadGameState,
   clearGameState,
+  saveHighScore,
 } from "../../utils";
 
 import Timer from "../../components/Timer";
@@ -33,9 +34,10 @@ const Board = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const isPaused = useSelector((state) => state.game.isPaused);
   const username = useSelector((state) => state.user.user);
-
+  console.log("location", location);
   //save
 
   useEffect(() => {
@@ -49,6 +51,7 @@ const Board = () => {
         timeCount,
         timerActive,
         cantFlipMore,
+        isGameComplete,
       };
       saveGameState(gameState);
     }
@@ -61,29 +64,29 @@ const Board = () => {
     cantFlipMore,
     isInitalLoading,
     username,
+    isGameComplete,
   ]);
 
   //load
   useEffect(() => {
     const savedData = loadGameState();
+    console.log(
+      "🚀🚀 ~  file: index.js:74 ~  useEffect ~  savedData:",
+      savedData
+    );
 
-    if (
-      savedData &&
-      savedData.username === username &&
-      savedData.cards.length > 0
-    ) {
-      // Load the game state
-      setCards(savedData.cards);
-      setFlippedCards(savedData.flippedCards);
-      // Convert matchedCards to a Set again
-      setMatchedCards(
-        new Set(
-          Array.isArray(savedData.matchedCards) ? savedData.matchedCards : []
-        )
-      );
-      setTimeCount(savedData.timeCount);
-      setTimerActive(savedData.timerActive);
-      setCanFlipMore(savedData.cantFlipMore);
+    if (savedData && savedData.username === username) {
+      if (!savedData.isGameComplete) {
+        // Load the game state
+        setCards(savedData.cards);
+        setFlippedCards(savedData.flippedCards);
+        setMatchedCards(new Set(savedData.matchedCards));
+        setTimeCount(savedData.timeCount);
+        setTimerActive(savedData.timerActive);
+        setCanFlipMore(savedData.cantFlipMore);
+      } else {
+        gameInit();
+      }
     } else {
       // Initialize a new game
       gameInit();
@@ -106,15 +109,8 @@ const Board = () => {
     setCards(shuffledCards);
     setInitialLoading(false);
   };
-
-  const openModal = () => {
-    setModalOpen(true);
-    dispatch(pauseGame());
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    dispatch(resumeGame());
+  const handleShowHighScores = () => {
+    navigate("/game/scores");
   };
 
   const flipCard = (id) => {
@@ -205,15 +201,25 @@ const Board = () => {
         username,
         time: timeCount,
       };
-      dispatch(addHighScore(highScore));
+      saveHighScore(highScore);
     }
-  }, [isGameComplete, timeCount, username, dispatch]);
+  }, [isGameComplete, timeCount, username]);
 
   //logout
   const handleLogout = () => {
     dispatch(logoutUser());
     navigate("/");
   };
+
+  useEffect(() => {
+    if (location.pathname === "/game/scores") {
+      dispatch(pauseGame());
+      setModalOpen(true);
+    } else {
+      dispatch(resumeGame());
+      setModalOpen(false);
+    }
+  }, [location, dispatch]);
 
   const renderTitleRow = () => {
     return (
@@ -238,7 +244,9 @@ const Board = () => {
               isPaused={isPaused}
             />
           </div>
-          <button onClick={openModal}>High Scores</button>
+          <button style={styles.highScore} onClick={handleShowHighScores}>
+            High Scores
+          </button>
         </div>
       </div>
     );
@@ -277,11 +285,7 @@ const Board = () => {
         </div>
       )}
       {modalOpen && (
-        <ScoreModal
-          isOpen={modalOpen}
-          onClose={closeModal}
-          // scores={scores}
-        />
+        <ScoreModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
       )}
     </div>
   );

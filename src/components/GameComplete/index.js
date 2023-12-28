@@ -8,12 +8,14 @@ const GameComplete = ({ checkScore, handlePlayAgain }) => {
   return (
     <div style={styles.container}>
       <h2>Congratulations {username}! You've won!</h2>
-      <button onClick={checkScore} style={styles.button}>
-        Check High Scores
-      </button>
-      <button onClick={handlePlayAgain} style={styles.button}>
-        Restart Game
-      </button>
+      <div style={styles.buttonContainer}>
+        <button onClick={checkScore} style={styles.button}>
+          Check High Scores
+        </button>
+        <button onClick={handlePlayAgain} style={styles.button}>
+          Restart Game
+        </button>
+      </div>
     </div>
   );
 };

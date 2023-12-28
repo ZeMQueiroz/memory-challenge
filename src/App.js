@@ -5,7 +5,6 @@ import store from "./redux/store";
 
 import Login from "./screens/Login";
 import Board from "./screens/Board";
-import Score from "./screens/Score";
 
 import ProtectedRoute from "./components/AuthenticatedRoute";
 
@@ -18,18 +17,20 @@ function App() {
         <Routes>
           <Route path='/' element={<Login />} />
           <Route
-            path='/board'
+            path='/game'
             element={
               <ProtectedRoute>
                 <Board />
               </ProtectedRoute>
             }
           />
+          {/* This route will also render the Board component, but the presence of 
+              /game/scores in the URL will be used to trigger the modal display */}
           <Route
-            path='/score'
+            path='/game/scores'
             element={
               <ProtectedRoute>
-                <Score />
+                <Board />
               </ProtectedRoute>
             }
           />

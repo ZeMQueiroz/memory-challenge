@@ -52,6 +52,17 @@ const style = {
     fontSize: 24,
     fontWeight: "bold",
   },
+  highScore: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "#B4653C",
+    color: "white",
+    fontSize: 16,
+    cursor: "pointer",
+    fontWeight: "bold",
+    transition: "background-color 0.9s",
+    border: "1px solid #ddd",
+  },
 
   board: {
     display: "grid",
