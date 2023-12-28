@@ -148,6 +148,14 @@ const Board = () => {
       const secondCard = cards.find((card) => card.id === secondCardId);
 
       if (firstCard.image === secondCard.image) {
+        setCards((prevCards) =>
+          prevCards.map((card) => {
+            if (card.id === firstCardId || card.id === secondCardId) {
+              return { ...card, matched: true };
+            }
+            return card;
+          })
+        );
         setMatchedCards(
           (matchedCards) =>
             new Set([...matchedCards, firstCardId, secondCardId])
@@ -207,20 +215,38 @@ const Board = () => {
     navigate("/");
   };
 
-  return (
-    <div style={styles.container}>
-      <h1>Welcome {username}</h1>
-      <h1>Memory Game</h1>
-      <div>
-        <Timer
-          timeCount={timeCount}
-          setTimeCount={setTimeCount}
-          timerActive={timerActive}
-          isPaused={isPaused}
-        />
-        <button onClick={openModal}>High Scores</button>
+  const renderTitleRow = () => {
+    return (
+      <div style={styles.titleRowContainer}>
+        <h1 style={styles.userTitle}>Welcome {username}</h1>
+        <h1 style={styles.gameTitle}>Probely Memory Game Challenge</h1>
         <LogoutButton handleLogout={handleLogout} />
       </div>
+    );
+  };
+
+  const renderHeader = () => {
+    return (
+      <div style={styles.headerContainer}>
+        {renderTitleRow()}
+        <div style={styles.headerBottomContainer}>
+          <div style={styles.timerContainer}>
+            <Timer
+              timeCount={timeCount}
+              setTimeCount={setTimeCount}
+              timerActive={timerActive}
+              isPaused={isPaused}
+            />
+          </div>
+          <button onClick={openModal}>High Scores</button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div style={styles.container}>
+      {renderHeader()}
       {isGameComplete ? (
         <GameComplete
           checkScore={() => setModalOpen(true)}

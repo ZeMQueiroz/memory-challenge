@@ -3,16 +3,62 @@ const style = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
     height: "100vh",
-    backgroundColor: "#3a3a3a",
+    backgroundColor: "#034c85",
   },
+  headerContainer: {
+    display: "flex",
+    flexDirection: "column",
+    width: "80%",
+  },
+
+  titleRowContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 20,
+  },
+
+  userTitle: {
+    fontSize: 24,
+    color: "white",
+    paddingRight: 20,
+  },
+
+  gameTitle: {
+    fontSize: 28,
+    paddingRight: 40,
+    paddingLeft: 20,
+    color: "#B4653C",
+  },
+
+  headerBottomContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "20px 40px",
+    border: "1px solid #034c85",
+  },
+
+  timerContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    color: "#ddd",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+
   board: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
     gridGap: 10,
     maxWidth: 600,
-    margin: "auto",
+    marginTop: 20,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -21,7 +67,7 @@ const style = {
     cursor: "pointer",
     width: 280,
     height: 200,
-    border: "1px solid #ddd",
+    border: "2px solid #ddd",
     backgroundColor: "#eee",
   },
   img: {
@@ -35,11 +81,11 @@ const style = {
   matched: {
     visibility: "visible",
     opacity: 0.5,
-    border: "1px solid green",
+    border: "2px solid #aef359",
   },
   cardBack: {
     position: "absolute",
-    backgroundColor: "#3333",
+    backgroundColor: "#b4653c",
     left: 0,
     bottom: 0,
     right: 0,
