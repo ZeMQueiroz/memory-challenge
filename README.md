@@ -1,4 +1,4 @@
-# Probely Memy Game ReadMe
+# Memory Memy Game ReadMe
 
 ## Thinking Process
 

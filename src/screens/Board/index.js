@@ -68,7 +68,7 @@ const Board = () => {
     return (
       <div style={styles.titleRowContainer}>
         <h1 style={styles.userTitle}>Welcome {username}</h1>
-        <h1 style={styles.gameTitle}>Probely Memory Game Challenge</h1>
+        <h1 style={styles.gameTitle}>Memory Game Challenge</h1>
         <LogoutButton handleLogout={handleLogout} />
       </div>
     );
